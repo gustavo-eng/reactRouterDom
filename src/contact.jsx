@@ -65,6 +65,7 @@ function set(contacts) {
 let fakeCache = {};
 
 async function fakeNetwork(key) {
+  
   if (!key) {
     fakeCache = {};
   }
@@ -77,4 +78,5 @@ async function fakeNetwork(key) {
   return new Promise(res => {
     setTimeout(res, Math.random() * 800);
   });
+
 }

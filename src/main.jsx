@@ -2,13 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 
 // É possível exportar dois components apartir de um único arquivo .jsx 
-import Root, 
-      {
-      loader as rootLoader,
-        action as rootAction,
-      } 
-
-from "./routes/root";
+import Root from "./routes/root";
 
 
 import {
@@ -19,33 +13,27 @@ import {
 
 import "./index.css";
 import ErrorPage from "./error-page";
-import Contact, {
-  loader as contactLoader,
-} from "./routes/contact";
+import Contact  from "./routes/contact";
 
 
 
 const router  = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-    errorElement: <ErrorPage />,
-    loader: rootLoader,
-    action: rootAction,
-    children: [
-      {
-        path: "contacts/:contactId",
-        element: <Contact />,
-        loader: contactLoader,
-      }
-    ], 
-  },
-  
-]);
+
+    {
+      path: "/",
+      element: <Root />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          path: "contacts/:contactId",
+          element: <Contact />,
+        }
+      ]
+    },
+    
+]);  
 
 
-
-// 20/05 -> Parei em "Configure o carregador na rota"
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
       <RouterProvider router={router} />

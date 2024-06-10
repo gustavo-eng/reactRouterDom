@@ -1,27 +1,10 @@
-import { 
-    Form,
-    useLoaderData 
-} from "react-router-dom";
-
-import {getContact} from "../contact";
-
-
-export async function loader({ params }) {
-  const contact = await getContact(params.contactId);
-
-  return { contact }; 
-
-}
-
+import { Form } from "react-router-dom";
 
 export default function Contact() {
-  
-  const { } = useLoaderData();
-
   const contact = {
     first: "Your",
     last: "Name",
-    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcBiBI248rgjtRfFgxc8WapC-w7npSGPi6GnV1_VUMww&s",
+    avatar: "https://robohash.org/you.png?size=200x200",
     twitter: "your_handle",
     notes: "Some notes",
     favorite: true,
@@ -30,10 +13,12 @@ export default function Contact() {
   return (
     <div id="contact">
       <div>
-        
         <img
           key={contact.avatar}
-          src={contact.avatar || null}
+          src={
+            contact.avatar ||
+            `https://robohash.org/${contact.id}.png?size=200x200`
+          }
         />
       </div>
 
@@ -88,8 +73,7 @@ export default function Contact() {
 }
 
 function Favorite({ contact }) {
-  // yes, this is a `let` for later
-  let favorite = contact.favorite;
+  const favorite = contact.favorite;
   return (
     <Form method="post">
       <button
