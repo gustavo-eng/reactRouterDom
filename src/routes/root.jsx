@@ -1,6 +1,34 @@
-import { Link, Outlet } from "react-router-dom";
+import { 
+    Link, 
+    Outlet, 
+    useLoaderData, 
+    Form, 
+    redirect,
+    NavLink 
+
+  } from "react-router-dom";
+import { getContacts, createContact } from "../contact";
+
+export async function loader() {
+    console.log('entrou na funcao loader ')
+  const contacts = await getContacts();
+  return { contacts };
+
+}
+
+export async function action() {
+    const contact = await createContact();
+    return redirect(`/contacts/${contact.id}/edit`);
+   // return { contact };
+}
 
 export default function Root() {
+    //Pego os dados de loader, mas este loader que está como funcao export de loader de root mesmo. 
+    const { contacts } = useLoaderData();
+    console.log('contactsss ')
+    console.log(contacts)
+ 
+
     return (
       <>
         <div id="sidebar">
@@ -24,19 +52,48 @@ export default function Root() {
                 aria-live="polite"
               ></div>
             </form>
-            <form method="post">
-              <button type="submit">New</button>
-            </form>
+            
+            <Form method="POST">
+                <button type="submit"> New </button>
+            </Form>
+npm 
           </div>
           <nav>
+           {contacts.length ? (
             <ul>
-              <li>
-              <Link to={`contacts/1`}>Contato 1 </Link>
-              </li>
-              <li>
-              <Link to={`contacts/2`}>Contato 2</Link>
-              </li>
+              {contacts.map((contact) => (
+                <li key={contact.id}>
+                  
+                  <NavLink
+                    to={`contacts/${contact.id}`}
+                    className={({ isActive, isPending }) =>
+                      isActive
+                        ? "active"
+                        : isPending
+                        ? "pending"
+                        : ""
+                    }
+                  >
+                  <Link to={`contacts/${contact.id}`}>
+                    {contact.first || contact.last ? (
+                      <>
+                        {contact.first} {contact.last}
+                      </>
+                    ) : (
+                      <i>No Name</i>
+                    )}{" "}
+                    {contact.favorite && <span>★</span>}
+                  </Link>
+                    {/* other code */}
+                  </NavLink>
+                </li>
+              ))}
             </ul>
+          ) : (
+            <p>
+              <i>No contacts</i>
+            </p>
+          )}
           </nav>
         </div>
         <div id="detail">
