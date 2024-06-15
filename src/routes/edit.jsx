@@ -9,9 +9,11 @@ import { updateContact } from "../contact"
 
 export async function action({request, params}) {
     const formData = await request.formData(); 
+    const firstName = formData.get("first");
+    const lastName = formData.get("last");
     const updates  = Object.fromEntries(formData);
-    await updateContact( params.contactId, updates);
-    return redirect(`/contact/${params.contactId}`);
+    await updateContact( params.contactId, updatdesd);
+    return redirect(`/contact/${params.contactId}`); 
 }
 
 

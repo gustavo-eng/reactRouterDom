@@ -20,7 +20,7 @@ import EditContact, {action as editAction} from "./routes/edit";
 import "./index.css";
 import ErrorPage from "./error-page";
 import Contact, { loader as contactLoader } from "./routes/contact";
-
+import { action as destroyAction } from "./routes/destroy";
 
 
 const router  = createBrowserRouter([
@@ -41,6 +41,10 @@ const router  = createBrowserRouter([
           element: <EditContact />,
           loader: contactLoader,
           action: editAction,
+        },
+        {
+          path: "contacts/:contactId/destroy",
+          action:  destroyAction, 
         }
       ]
     },
@@ -53,12 +57,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <RouterProvider router={router} />
   </React.StrictMode>
 );
-
-
-
-
-
-
-
-
-

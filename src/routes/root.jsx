@@ -4,7 +4,8 @@ import {
     useLoaderData, 
     Form, 
     redirect,
-    NavLink 
+    NavLink,
+    useNavigation 
 
   } from "react-router-dom";
 import { getContacts, createContact } from "../contact";
@@ -17,14 +18,20 @@ export async function loader() {
 }
 
 export async function action() {
+    
     const contact = await createContact();
+    
+    
+    
     return redirect(`/contacts/${contact.id}/edit`);
-   // return { contact };
-}
-
-export default function Root() {
+    
+    // return { contact };
+  }
+  
+  export default function Root() {
     //Pego os dados de loader, mas este loader que está como funcao export de loader de root mesmo. 
     const { contacts } = useLoaderData();
+    const navigation = useNavigation();
     console.log('contactsss ')
     console.log(contacts)
  
@@ -39,7 +46,7 @@ export default function Root() {
                 id="q"
                 aria-label="Search contacts"
                 placeholder="Search"
-                type="search"
+                type="searsch"
                 name="q"
               />
               <div
@@ -56,7 +63,7 @@ export default function Root() {
             <Form method="POST">
                 <button type="submit"> New </button>
             </Form>
-npm 
+
           </div>
           <nav>
            {contacts.length ? (
@@ -73,6 +80,7 @@ npm
                         ? "pending"
                         : ""
                     }
+
                   >
                   <Link to={`contacts/${contact.id}`}>
                     {contact.first || contact.last ? (
@@ -81,7 +89,7 @@ npm
                       </>
                     ) : (
                       <i>No Name</i>
-                    )}{" "}
+                    )}{" "}npm ru
                     {contact.favorite && <span>★</span>}
                   </Link>
                     {/* other code */}
@@ -96,9 +104,9 @@ npm
           )}
           </nav>
         </div>
-        <div id="detail">
+        <div id="detail" className={navigation.state === "loading" ? "loading" : ""}>
             <Outlet /> 
         </div>
       </>
     );
-  }
+}
