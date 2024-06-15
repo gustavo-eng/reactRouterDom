@@ -1,7 +1,8 @@
 import { 
     Form, 
     useLoaderData,
-    redirect
+    redirect,
+    useNavigate
 } from "react-router-dom";
 
 
@@ -19,6 +20,8 @@ export async function action({request, params}) {
 
 export default function EditContact() {
   const { contact } = useLoaderData();
+
+  const navigate = useNavigate();
 
   return (
 
@@ -71,7 +74,12 @@ export default function EditContact() {
       </label>
       <p>
         <button type="submit">Save</button>
-        <button type="button">Cancel</button>
+        <button 
+          type="button"
+          onClick={(e) => {
+            navigate(-1); // diferente de (/) pos / vai para a rota pai, enquanto -1 volta para a rota anterior 
+          }}
+        >Cancel</button>
       </p>
     </Form>
   );

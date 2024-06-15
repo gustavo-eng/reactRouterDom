@@ -5,16 +5,19 @@ import {
     Form, 
     redirect,
     NavLink,
-    useNavigation 
+    useNavigation ,
+    useSubmit
 
   } from "react-router-dom";
 import { getContacts, createContact } from "../contact";
+import { useEffect } from "react";
 
-export async function loader() {
-    console.log('entrou na funcao loader ')
-  const contacts = await getContacts();
+
+export async function loader({ request }) {
+  const url = new URL(request.url);
+  const q = url.searchParams.get("q");
+  const contacts = await getContacts(q);
   return { contacts };
-
 }
 
 export async function action() {
@@ -29,11 +32,15 @@ export async function action() {
   }
   
   export default function Root() {
+  
     //Pego os dados de loader, mas este loader que está como funcao export de loader de root mesmo. 
-    const { contacts } = useLoaderData();
+    const { contacts, q } = useLoaderData();
     const navigation = useNavigation();
-    console.log('contactsss ')
-    console.log(contacts)
+    const submit = useSubmit();
+
+    useEffect(() => {
+      document.getElementById("q").value = q;
+    }, [q]);
  
 
     return (
@@ -41,24 +48,21 @@ export async function action() {
         <div id="sidebar">
           <h1>React Router Contacts</h1>
           <div>
-            <form id="search-form" role="search">
-              <input
-                id="q"
-                aria-label="Search contacts"
-                placeholder="Search"
-                type="searsch"
-                name="q"
-              />
-              <div
-                id="search-spinner"
-                aria-hidden
-                hidden={true}
-              />
-              <div
-                className="sr-only"
-                aria-live="polite"
-              ></div>
-            </form>
+          <Form id="search-form" role="search">
+            <input
+              id="q"
+              aria-label="Search contacts"
+              placeholder="Search"
+              type="search"
+              name="q"
+              defaultValue={q}
+              onChange={(event) => {
+                submit(event.currentTarget.form);
+              }}
+            />
+            <div id="search-spinner" aria-hidden hidden={true} />
+            <div className="sr-only" aria-live="polite"></div>
+          </Form>
             
             <Form method="POST">
                 <button type="submit"> New </button>
@@ -89,7 +93,7 @@ export async function action() {
                       </>
                     ) : (
                       <i>No Name</i>
-                    )}{" "}npm ru
+                    )}
                     {contact.favorite && <span>★</span>}
                   </Link>
                     {/* other code */}
